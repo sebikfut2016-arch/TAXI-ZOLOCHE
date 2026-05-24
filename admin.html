@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Driver Admin 🚖</title>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+body{
+    font-family:Arial;
+    background:#000;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+button{
+    margin:5px;
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.card{
+    background:#222;
+    padding:20px;
+    border-radius:20px;
+    margin-top:20px;
+}
+</style>
+
+</head>
+<body>
+
+<h1>🚖 Driver Admin</h1>
+
+<div id="reader"></div>
+
+<div id="result"></div>
+
+<script>
+
+let password = prompt("Пароль:");
+
+if(password !== "zoloche123"){
+    document.body.innerHTML = "<h1>❌ Нема доступу</h1>";
+}
+
+function onScanSuccess(decodedText){
+
+    let data = localStorage.getItem(decodedText);
+
+    if(!data){
+        alert("Замовлення не знайдено");
+        return;
+    }
+
+    let order = JSON.parse(data);
+
+    showOrder(order, decodedText);
+}
+
+function showOrder(order, key){
+
+    document.getElementById("result").innerHTML = `
+    
+    <div class="card">
+
+    <h2>${order.name}</h2>
+
+    <p>📍 ${order.from}</p>
+
+    <p>🏁 ${order.to}</p>
+
+    <h3 id="status">${order.status}</h3>
+
+    <button onclick="updateStatus('${key}','🚖 Приїхав')">🚖 Приїхав</button>
+
+    <button onclick="updateStatus('${key}','👤 Забрав')">👤 Забрав</button>
+
+    <button onclick="updateStatus('${key}','⏳ Чекаю')">⏳ Чекаю</button>
+
+    <button onclick="updateStatus('${key}','✅ Довіз')">✅ Довіз</button>
+
+    <button onclick="updateStatus('${key}','💵 Оплачено')">💵 Оплачено</button>
+
+    </div>
+    
+    `;
+}
+
+function updateStatus(key, status){
+
+    let order = JSON.parse(localStorage.getItem(key));
+
+    order.status = status;
+
+    localStorage.setItem(key, JSON.stringify(order));
+
+    document.getElementById("status").innerText = status;
+}
+
+let scanner = new Html5QrcodeScanner(
+    "reader",
+    { fps: 10, qrbox: 250 }
+);
+
+scanner.render(onScanSuccess);
+
+</script>
+
+</body>
+</html>
