@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Zoloche Taxi 🚖</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+body{
+    font-family:Arial;
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+input{
+    width:90%;
+    padding:15px;
+    margin:10px;
+    border:none;
+    border-radius:10px;
+}
+
+button{
+    padding:15px 30px;
+    border:none;
+    border-radius:10px;
+    background:yellow;
+    font-size:20px;
+    cursor:pointer;
+}
+
+#qrcode{
+    margin-top:30px;
+    display:flex;
+    justify-content:center;
+}
+</style>
+
+</head>
+<body>
+
+<h1>🚖 Zoloche Taxi</h1>
+
+<input type="text" id="name" placeholder="Ім’я та прізвище">
+
+<input type="text" id="from" placeholder="Звідки">
+
+<input type="text" id="to" placeholder="Куди">
+
+<button onclick="createOrder()">Замовити</button>
+
+<div id="qrcode"></div>
+
+<script>
+
+function createOrder(){
+
+    let name = document.getElementById("name").value;
+    let from = document.getElementById("from").value;
+    let to = document.getElementById("to").value;
+
+    let order = {
+        id: Date.now(),
+        name: name,
+        from: from,
+        to: to,
+        status: "Очікує"
+    };
+
+    localStorage.setItem("order_" + order.id, JSON.stringify(order));
+
+    document.getElementById("qrcode").innerHTML = "";
+
+    new QRCode(document.getElementById("qrcode"), {
+        text: "order_" + order.id,
+        width: 250,
+        height: 250
+    });
+
+}
+
+</script>
+
+</body>
+</html>
