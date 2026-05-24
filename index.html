@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>TAXI ZOLOCHE 🚖</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+body{
+  font-family:Arial;
+  text-align:center;
+  background:#111;
+  color:white;
+  padding:20px;
+}
+
+input, button{
+  padding:12px;
+  margin:8px;
+  width:80%;
+  border-radius:10px;
+  border:none;
+}
+
+button{
+  background:yellow;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#qrcode{
+  margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🚖 TAXI ZOLOCHE</h1>
+
+<input id="name" placeholder="Ім'я">
+<input id="from" placeholder="Звідки">
+<input id="to" placeholder="Куди">
+
+<button onclick="order()">Замовити</button>
+
+<div id="qrcode"></div>
+
+<script>
+function order(){
+  let id = "order_" + Date.now();
+
+  let data = {
+    id: id,
+    name: document.getElementById("name").value,
+    from: document.getElementById("from").value,
+    to: document.getElementById("to").value,
+    status: "Очікує"
+  };
+
+  localStorage.setItem(id, JSON.stringify(data));
+
+  document.getElementById("qrcode").innerHTML = "";
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: id,
+    width: 200,
+    height: 200
+  });
+}
+</script>
+
+</body>
+</html>
